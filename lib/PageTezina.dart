@@ -54,41 +54,44 @@ class _PageTezinaState extends State<PageTezina> {
         backgroundColor: const Color(0xFFCCCCFF),
         elevation: 0,
         iconTheme: const IconThemeData(color: Color(0xFF440D68)),
-        title: const Text('Odaberi težinu', style: TextStyle(color: Color(0xFF440D68), fontWeight: FontWeight.bold)),
+        title: const Text('ODABERI TEŽINU', style: TextStyle(color: Color(0xFF440D68), fontWeight: FontWeight.bold, fontSize: 22)),
         centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: ListView(
-
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const SizedBox(height: 20),
-            Text(
-              'Odaberi koje grupe brojeva želiš vježbati:',
-              style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Color(0xFF440D68)),
-              textAlign: TextAlign.center,
+            Column(
+              children: [
+                const SizedBox(height: 10),
+                Text(
+                  'Odaberi grupe brojeva za vježbanje:',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF440D68)),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 10),
+                ..._numberSets.keys.map((set) => _buildOption(set)).toList(),
+                const SizedBox(height: 10),
+                Divider(thickness: 1.5, color: Color(0xFFCCCCFF)),
+                SwitchListTile(
+                  title: Text('Vremenski izazov (1 min)', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF440D68))),
+                  value: _timedMode,
+                  activeColor: Color(0xFF440D68),
+                  onChanged: (val) {
+                    setState(() => _timedMode = val);
+                  },
+                ),
+              ],
             ),
-            const SizedBox(height: 30),
-            ..._numberSets.keys.map((set) => _buildOption(set)).toList(),
-            const SizedBox(height: 30),
-            Divider(thickness: 2, color: Color(0xFFCCCCFF)),
-            SwitchListTile(
-              title: Text('Vremenski izazov (1 minuta)', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Color(0xFF440D68))),
-              value: _timedMode,
-              activeColor: Color(0xFF440D68),
-              onChanged: (val) {
-                setState(() => _timedMode = val);
-              },
-            ),
-            const Spacer(),
             ElevatedButton(
               onPressed: _saveAndExit,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(0xFFCCCCFF),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                padding: const EdgeInsets.symmetric(vertical: 14),
+                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               ),
-              child: const Text('Pohrani promjene', style: TextStyle(color: Color(0xFF440D68), fontWeight: FontWeight.bold, fontSize: 22)),
+              child: const Text('Pohrani promjene', style: TextStyle(color: Color(0xFF440D68), fontWeight: FontWeight.bold, fontSize: 18)),
             )
           ],
         ),
@@ -102,33 +105,22 @@ class _PageTezinaState extends State<PageTezina> {
     return GestureDetector(
       onTap: () {
         setState(() {
-          if (isSelected) {
-            _selectedSets.remove(set);
-          } else {
-            _selectedSets.add(set);
-          }
+          isSelected ? _selectedSets.remove(set) : _selectedSets.add(set);
         });
       },
       child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 10),
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+        margin: const EdgeInsets.symmetric(vertical: 5),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
         decoration: BoxDecoration(
           color: isSelected ? Color(0xFFCCCCFF) : Colors.white,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(16),
           border: Border.all(color: Color(0xFF440D68), width: 2),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 5,
-              offset: Offset(0, 3),
-            ),
-          ],
         ),
         child: Center(
           child: Text(
             set,
             style: TextStyle(
-              fontSize: 32,
+              fontSize: 24,
               fontWeight: FontWeight.bold,
               color: Color(0xFF440D68),
             ),
@@ -137,4 +129,5 @@ class _PageTezinaState extends State<PageTezina> {
       ),
     );
   }
+
 }

@@ -99,8 +99,9 @@ class _PagePostavkeState extends State<PagePostavke> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFFCCCCFF),
-        title: const Text('Postavke', style: TextStyle(color: Color(0xFF440D68), fontWeight: FontWeight.bold)),
+        title: const Text('POSTAVKE', style: TextStyle(color: Color(0xFF440D68), fontWeight: FontWeight.bold)),
         iconTheme: const IconThemeData(color: Color(0xFF440D68)),
+        centerTitle: true,
         elevation: 0,
       ),
       backgroundColor: const Color(0xFFF8F8E8),

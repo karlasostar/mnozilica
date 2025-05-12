@@ -153,6 +153,7 @@ class _PageTablicaInteraktivnaState extends State<PageTablicaInteraktivna> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: const Color(0xFFF8F8E8),
       body: Stack(
         children: [

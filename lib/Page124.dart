@@ -289,7 +289,7 @@ class _Page124State extends State<Page124> {
     } else if (total <= 4){
       broj = 300.0;
     } else if (total == 6){
-      broj = 270.0;
+      broj = 250.0;
     }
     // Calculate width based on longest row (like original logic)
     int maxInRow = layout.map((row) => row.length).reduce(max);

@@ -26,7 +26,7 @@ class _Page510State extends State<Page510> {
   void _generateNewChallenge() {
     setState(() {
       firstNumber = Random().nextInt(10) + 1;
-      secondNumber = ([5,10]..shuffle()).first;
+      secondNumber = ([5, 10]..shuffle()).first;
     });
   }
 
@@ -68,14 +68,14 @@ class _Page510State extends State<Page510> {
             ),
           ),
           Positioned(
-            top: 30,
+            top: 40,
             left: 0,
             right: 0,
             child: Center(
               child: Text(
                 "Koliko latica se nalazi na ekranu?",
                 style: TextStyle(
-                  fontSize: 40,
+                  fontSize: 50,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF440D68),
                 ),
@@ -107,25 +107,11 @@ class _Page510State extends State<Page510> {
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 40),
                 child: Column(
                   children: [
+                    const SizedBox(height: 60),
                     Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 60),
-                          Wrap(
-                            alignment: WrapAlignment.center,
-                            spacing: 1,
-                            runSpacing: 1,
-                            children: List.generate(
-                              total,
-                                  (index) => Image.asset(
-                                'lib/pictures/${secondNumber}listica.png',
-                                width: width,
-                                height: width,
-                              ),
-                            ),
-                          ),
-                        ],
+                      child: Center(
+
+                        child:_buildFlowerRows(total, secondNumber, constraints.maxWidth),
                       ),
                     ),
                     SizedBox(
@@ -138,6 +124,8 @@ class _Page510State extends State<Page510> {
                   ],
                 ),
               );
+
+
             },
           ),
         ],
@@ -240,35 +228,106 @@ class _Page510State extends State<Page510> {
           }
         },
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 30),
+          padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 10), // Bigger button
           decoration: BoxDecoration(
             color: const Color(0xFFCCCCFF),
-            borderRadius: BorderRadius.circular(90),
+            borderRadius: BorderRadius.circular(100), // Rounded edges
           ),
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              return Center(
-                child: FittedBox(
-                  fit: BoxFit.contain,
-                  child: Text(
-                    expression,
-                    style: TextStyle(
-                      fontSize: 100, // large starting font, will scale down as needed
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF440D68),
-                    ),
-                  ),
-                ),
-              );
-            },
+          child: Center(
+            child: Text(
+              expression,
+              style: TextStyle(
+                fontSize: 40,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF440D68),
+              ),
+            ),
           ),
         ),
+
 
 
 
       );
     }).toList();
   }
+
+
+  Widget _buildFlowerRows(int total, int secondNumber, double maxWidth) {
+    const double spacing = 5.0;
+    double broj = 240.0;
+    List<List<int>> layout;
+
+    if (total <= 5) {
+      layout = [List.generate(total, (i) => i)];
+    } else if (total == 6) {
+      layout = [List.generate(3, (i) => i), List.generate(3, (i) => i + 3)];
+    } else if (total == 7) {
+      layout = [List.generate(4, (i) => i), List.generate(3, (i) => i + 4)];
+    } else if (total == 8) {
+      layout = [List.generate(4, (i) => i), List.generate(4, (i) => i + 4)];
+    } else if (total == 9) {
+      layout = [List.generate(5, (i) => i), List.generate(4, (i) => i + 4)];
+    } else if (total == 10) {
+      layout = [List.generate(5, (i) => i), List.generate(5, (i) => i + 5)];
+    } else {
+      int maxPerRow = min(5, total);
+      double width = (maxWidth - spacing * (maxPerRow - 1)) / maxPerRow;
+
+      return Wrap(
+        alignment: WrapAlignment.center,
+        spacing: spacing,
+        runSpacing: spacing,
+        children: List.generate(
+          total,
+              (index) => _flowerImage(secondNumber, width),
+        ),
+      );
+    }
+    if (total == 1){
+      broj = 350.0;
+    } else if (total <= 4){
+      broj = 300.0;
+    } else if (total == 6){
+      broj = 250.0;
+    }
+    // Calculate width based on longest row (like original logic)
+    int maxInRow = layout.map((row) => row.length).reduce(max);
+    double imageSize = min(
+      broj,
+      (maxWidth - ((maxInRow - 1) * spacing)) / maxInRow,
+    );
+
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: layout.map((row) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: spacing / 2),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: row.map((i) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: spacing / 2),
+                child: _flowerImage(secondNumber, imageSize),
+              );
+            }).toList(),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+
+
+  Widget _flowerImage(int secondNumber, double size) {
+    return Image.asset(
+      'lib/pictures/${secondNumber}listica.png',
+      width: size,
+      height: size,
+    );
+  }
+
 
   Widget _feedbackDialog(bool isCorrect, int result) {
     return Dialog(

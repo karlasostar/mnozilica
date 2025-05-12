@@ -47,11 +47,13 @@ class _PageIzazov extends State<PageIzazov> {
       selectedNumbers = [1, 2, 4];
     }
 
+    await _loadRecord();
+
     setState(() {
       _availableSecondNumbers = selectedNumbers;
     });
 
-    await _loadRecord();
+
     _generateNewChallenge();
 
     if (_timedMode) {
@@ -98,13 +100,16 @@ class _PageIzazov extends State<PageIzazov> {
 
   Future<void> _loadRecord() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    _record = prefs.getInt('record') ?? 0;
-    setState(() {});
+    int saved = prefs.getInt('record') ?? 0;
+    setState(() {
+      _record = saved;
+    });
   }
+
 
   void _updateRecord() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (_score > _record) {
+    if (_score >= _record) {
       await prefs.setInt('record', _score);
     }
   }
@@ -161,6 +166,7 @@ class _PageIzazov extends State<PageIzazov> {
 
   void _generateNewChallenge() {
     setState(() {
+
       _firstNumber = _random.nextInt(10) + 1;
       _secondNumber = _availableSecondNumbers[_random.nextInt(_availableSecondNumbers.length)];
       _input = '';
