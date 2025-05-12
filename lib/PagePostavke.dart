@@ -12,7 +12,7 @@ class PagePostavke extends StatefulWidget {
 class _PagePostavkeState extends State<PagePostavke> {
   bool _soundEnabled = true;
   double _fontSize = 24;
-  String _difficulty = 'Srednje';
+  String _difficulty = 'Teško';
   String _fontStyle = 'Default';
   String _soundType = 'Klasični';
   bool _voiceFeedback = false;
@@ -34,7 +34,7 @@ class _PagePostavkeState extends State<PagePostavke> {
     setState(() {
       _soundEnabled = prefs.getBool('sound') ?? true;
       _fontSize = prefs.getDouble('fontSize') ?? 24;
-      _difficulty = prefs.getString('difficulty') ?? 'Srednje';
+      _difficulty = prefs.getString('difficulty') ?? 'Teško';
       _fontStyle = prefs.getString('fontStyle') ?? 'Default';
       _soundType = prefs.getString('soundType') ?? 'Klasični';
       _voiceFeedback = prefs.getBool('voiceFeedback') ?? false;
