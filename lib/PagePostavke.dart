@@ -113,23 +113,6 @@ class _PagePostavkeState extends State<PagePostavke> {
               setState(() => _fontStyle = val);
               _saveSettings();
             })),
-            _dividerWrapper(Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Veličina slova: ${_fontSize.round()}', style: TextStyle(fontWeight: FontWeight.bold)),
-                Slider(
-                  value: _fontSize,
-                  min: 16,
-                  max: 36,
-                  divisions: 5,
-                  label: _fontSize.round().toString(),
-                  onChanged: (val) {
-                    setState(() => _fontSize = val);
-                    _saveSettings();
-                  },
-                ),
-              ],
-            )),
             _dividerWrapper(SwitchListTile(
               title: const Text('Zvukovi', style: TextStyle(fontWeight: FontWeight.bold)),
               value: _soundEnabled,

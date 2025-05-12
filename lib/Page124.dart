@@ -2,6 +2,7 @@
 import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'main.dart';
 import 'PagePostavke.dart';
 
@@ -16,12 +17,22 @@ class _Page124State extends State<Page124> {
   late int firstNumber;
   late int secondNumber;
   int counter = 0;
+  int _taskCount = 10;
 
   @override
   void initState() {
     super.initState();
+    _loadTaskCount();
     _generateNewChallenge();
   }
+
+  Future<void> _loadTaskCount() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _taskCount = prefs.getInt('taskCount') ?? 10;
+    });
+  }
+
 
   void _generateNewChallenge() {
     setState(() {
@@ -162,7 +173,7 @@ class _Page124State extends State<Page124> {
               builder: (context) {
                 Future.delayed(Duration(seconds: 2), () {
                   Navigator.of(context).pop();
-                  if (counter < 10) {
+                  if (counter < _taskCount) {
                     _generateNewChallenge();
                   } else {
                     showDialog(
@@ -195,7 +206,7 @@ class _Page124State extends State<Page124> {
                             children: [
                               SizedBox(height: 10),
                               Text(
-                                "Riješio si 10 zadataka!",
+                                "Riješio si $_taskCount zadataka!",
                                 style: TextStyle(
                                   fontSize: 22,
                                   color: Color(0xFF440D68),
