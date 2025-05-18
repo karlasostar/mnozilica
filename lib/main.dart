@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,6 +15,25 @@ import 'PageBrojevi.dart';
 import 'PageInfo.dart';
 import 'PageIzazov.dart';
 
+final AudioPlayer backgroundPlayer = AudioPlayer();
+
+Future<void> _startBackgroundMusic() async {
+  final prefs = await SharedPreferences.getInstance();
+  final soundEnabled = prefs.getBool('sound') ?? true;
+  final soundType = prefs.getString('soundType')?.toLowerCase() ?? 'zabavni';
+
+  if (soundEnabled) {
+    try {
+      await backgroundPlayer.setReleaseMode(ReleaseMode.loop);
+      await backgroundPlayer.setSource(AssetSource('sounds/$soundType.mp3'));
+      await backgroundPlayer.resume(); // Ovdje se sviranje pokreće stabilnije
+    } catch (e) {
+      print('Greška pri pokretanju pozadinske glazbe: $e');
+    }
+  }
+}
+
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -22,8 +42,12 @@ void main() async {
     DeviceOrientation.landscapeRight,
   ]);
 
+  await _startBackgroundMusic();
+
   runApp(MyApp());
 }
+
+
 
 class MyApp extends StatelessWidget {
   @override

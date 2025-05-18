@@ -10,11 +10,13 @@ class PagePostavke extends StatefulWidget {
 }
 
 class _PagePostavkeState extends State<PagePostavke> {
+  int _record = 0;
+
   bool _soundEnabled = true;
   double _fontSize = 24;
   String _difficulty = 'Teško';
   String _fontStyle = 'Default';
-  String _soundType = 'Klasični';
+  String _soundType = 'Zabavni';
   bool _voiceFeedback = false;
   int _taskCount = 10;
   bool _lockedModes = false;
@@ -36,10 +38,12 @@ class _PagePostavkeState extends State<PagePostavke> {
       _fontSize = prefs.getDouble('fontSize') ?? 24;
       _difficulty = prefs.getString('difficulty') ?? 'Teško';
       _fontStyle = prefs.getString('fontStyle') ?? 'Default';
-      _soundType = prefs.getString('soundType') ?? 'Klasični';
+      _soundType = prefs.getString('soundType') ?? 'Zabavni';
       _voiceFeedback = prefs.getBool('voiceFeedback') ?? false;
       _taskCount = prefs.getInt('taskCount') ?? 10;
       _lockedModes = prefs.getBool('lockedModes') ?? false;
+      _record = prefs.getInt('record') ?? 0;
+
     });
   }
 
@@ -58,10 +62,16 @@ class _PagePostavkeState extends State<PagePostavke> {
   Future<void> _resetRecord() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setInt('record', 0);
+
+    setState(() {
+      _record = 0; // <<<< AŽURIRAJ STANJE
+    });
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Rekord je uspješno resetiran.')),
     );
   }
+
 
   Future<void> _resetAllSettings() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -109,12 +119,8 @@ class _PagePostavkeState extends State<PagePostavke> {
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
-            _dividerWrapper(_buildChoiceChips("Font", _fontOptions, _fontStyle, (val) {
-              setState(() => _fontStyle = val);
-              _saveSettings();
-            })),
             _dividerWrapper(SwitchListTile(
-              title: const Text('Zvukovi', style: TextStyle(fontWeight: FontWeight.bold)),
+              title: const Text('Glasovna potvrda (točno/netočno)', style: TextStyle(fontWeight: FontWeight.bold)),
               value: _soundEnabled,
               activeColor: Color(0xFF440D68),
               onChanged: (val) {
@@ -126,15 +132,6 @@ class _PagePostavkeState extends State<PagePostavke> {
               setState(() => _soundType = val);
               _saveSettings();
             })),
-            _dividerWrapper(SwitchListTile(
-              title: const Text('Glasovna potvrda (točno/krivo)', style: TextStyle(fontWeight: FontWeight.bold)),
-              value: _voiceFeedback,
-              activeColor: Color(0xFF440D68),
-              onChanged: (val) {
-                setState(() => _voiceFeedback = val);
-                _saveSettings();
-              },
-            )),
             _dividerWrapper(_buildChoiceChips("Težina zadataka", _difficultyLevels, _difficulty, (val) {
               setState(() => _difficulty = val);
               _saveSettings();
@@ -156,6 +153,19 @@ class _PagePostavkeState extends State<PagePostavke> {
                 ),
               ],
             )),
+
+            _dividerWrapper(Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Trenutni rekord:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                SizedBox(height: 8),
+                Text(
+                  '$_record bodova',
+                  style: TextStyle(fontSize: 22, color: Color(0xFF440D68), fontWeight: FontWeight.bold),
+                ),
+              ],
+            )),
+
             _dividerWrapper(ElevatedButton.icon(
               onPressed: _resetRecord,
               icon: const Icon(Icons.refresh, color: Color(0xFF440D68)),
