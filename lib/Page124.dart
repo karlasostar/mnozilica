@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'main.dart';
 import 'PagePostavke.dart';
+import 'package:audioplayers/audioplayers.dart';
+
 
 class Page124 extends StatefulWidget {
   const Page124({Key? key}) : super(key: key);
@@ -18,6 +20,8 @@ class _Page124State extends State<Page124> {
   late int secondNumber;
   int counter = 0;
   int _taskCount = 10;
+  final AudioPlayer _audioPlayer = AudioPlayer();
+
 
   @override
   void initState() {
@@ -31,6 +35,28 @@ class _Page124State extends State<Page124> {
     setState(() {
       _taskCount = prefs.getInt('taskCount') ?? 10;
     });
+  }
+
+  Future<bool> _isSoundEnabled() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('sound') ?? true;
+  }
+
+  Future<void> _playCorrectSound() async {
+    final player = AudioPlayer();
+    await player.play(AssetSource('sounds/correct.mp3'));
+  }
+  Future<void> _playWrongSound() async {
+    final player = AudioPlayer();
+    await player.play(AssetSource('sounds/wrong.mp3'));
+  }
+  Future<void> _playFeedbackSound(bool isCorrect) async {
+    if (await _isSoundEnabled()) {
+      final player = AudioPlayer();
+      await player.play(
+        AssetSource(isCorrect ? 'sounds/correct.mp3' : 'sounds/wrong.mp3'),
+      );
+    }
   }
 
 
@@ -94,6 +120,11 @@ class _Page124State extends State<Page124> {
               ),
             ),
           ),
+
+
+
+
+
 
           Positioned(
             top: 20,
@@ -341,6 +372,8 @@ class _Page124State extends State<Page124> {
 
 
   Widget _feedbackDialog(bool isCorrect, int result) {
+    Future.microtask(() => _playFeedbackSound(isCorrect));
+
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30),

@@ -1,7 +1,9 @@
 // NOVA VERZIJA sa brojacem ponavljanja
 import 'dart:math';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'main.dart';
 import 'PagePostavke.dart';
 
@@ -28,6 +30,27 @@ class _Page510State extends State<Page510> {
       firstNumber = Random().nextInt(10) + 1;
       secondNumber = ([5, 10]..shuffle()).first;
     });
+  }
+
+  Future<void> _playFeedbackSound(bool isCorrect) async {
+    if (await _isSoundEnabled()) {
+      final player = AudioPlayer();
+      await player.play(
+        AssetSource(isCorrect ? 'sounds/correct.mp3' : 'sounds/wrong.mp3'),
+      );
+    }
+  }
+  Future<bool> _isSoundEnabled() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('sound') ?? true;
+  }
+  Future<void> _playCorrectSound() async {
+    final player = AudioPlayer();
+    await player.play(AssetSource('sounds/correct.mp3'));
+  }
+  Future<void> _playWrongSound() async {
+    final player = AudioPlayer();
+    await player.play(AssetSource('sounds/wrong.mp3'));
   }
 
   @override
@@ -330,6 +353,7 @@ class _Page510State extends State<Page510> {
 
 
   Widget _feedbackDialog(bool isCorrect, int result) {
+    Future.microtask(() => _playFeedbackSound(isCorrect));
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30),

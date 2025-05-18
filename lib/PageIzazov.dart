@@ -136,33 +136,61 @@ class _PageIzazov extends State<PageIzazov> {
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         backgroundColor: Color(0xFFCCCCFF),
-        title: Center(child: Text('Vrijeme je isteklo!', style: TextStyle(color: Color(0xFF440D68), fontWeight: FontWeight.bold))),
+        title: Center(
+          child: Text(
+            'Vrijeme je isteklo!',
+            style: TextStyle(
+              color: Color(0xFF440D68),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Osvojeni bodovi: $_score', style: TextStyle(color: Color(0xFF440D68), fontSize: 24)),
+            Text(
+              'Osvojeni bodovi: $_score',
+              style: TextStyle(
+                color: Color(0xFF440D68),
+                fontSize: 24,
+              ),
+            ),
             SizedBox(height: 20),
             Icon(Icons.alarm_off, size: 60, color: Colors.red),
           ],
         ),
         actions: [
-          Center(
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainMenu()));
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF440D68),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-              ),
-              child: Text('Nazad na izbornik', style: TextStyle(color: Colors.white)),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // zatvori dialog
+              _score = 0;
+              _input = '';
+              _startTimer();
+              _generateNewChallenge();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Color(0xFF440D68),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
             ),
-          )
+            child: Text('Ponovno igraj', style: TextStyle(color: Colors.white)),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainMenu()));
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              side: BorderSide(color: Color(0xFF440D68)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+            ),
+            child: Text('Nazad na izbornik', style: TextStyle(color: Color(0xFF440D68))),
+          ),
         ],
       ),
     );
   }
+
 
   void _generateNewChallenge() {
     setState(() {
