@@ -420,7 +420,7 @@ class _PageIzazov extends State<PageIzazov> {
             padding: EdgeInsets.all(0),
           ),
           onPressed: onPressed,
-          child: Icon(icon, color: Color(0xFFCCCCFF)),
+          child: Icon(icon, size: 50,color: Color(0xFFCCCCFF)),
         ),
       ),
     );
@@ -433,12 +433,12 @@ class _PageIzazov extends State<PageIzazov> {
         height: 120,
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.deepPurple.shade100,
+            backgroundColor: Color(0xFFCCCCFF),
             shape: CircleBorder(),
             padding: EdgeInsets.all(0),
           ),
           onPressed: onPressed,
-          child: Text(text, style: TextStyle(fontSize: 45, color: Colors.deepPurple)),
+          child: Text(text, style: TextStyle(fontSize: 45,color: Color(0xFF440D68))),
         ),
       ),
     );

@@ -16,13 +16,13 @@ class _PagePostavkeState extends State<PagePostavke> {
   double _fontSize = 24;
   String _difficulty = 'Teško';
   String _fontStyle = 'Default';
-  String _soundType = 'Zabavni';
+  String _soundType = 'Mirni';
   bool _voiceFeedback = false;
   int _taskCount = 10;
   bool _lockedModes = false;
 
   final List<String> _fontOptions = ['Default', 'Sans', 'Serif', 'Monospace'];
-  final List<String> _soundOptions = ['Klasični', 'Zabavni'];
+  final List<String> _soundOptions = ['Mirni', 'Zabavan', 'Bez zvuka'];
   final List<String> _difficultyLevels = ['Lako', 'Srednje', 'Teško'];
 
   @override
@@ -38,7 +38,7 @@ class _PagePostavkeState extends State<PagePostavke> {
       _fontSize = prefs.getDouble('fontSize') ?? 24;
       _difficulty = prefs.getString('difficulty') ?? 'Teško';
       _fontStyle = prefs.getString('fontStyle') ?? 'Default';
-      _soundType = prefs.getString('soundType') ?? 'Zabavni';
+      _soundType = prefs.getString('soundType') ?? 'Mirni';
       _voiceFeedback = prefs.getBool('voiceFeedback') ?? false;
       _taskCount = prefs.getInt('taskCount') ?? 10;
       _lockedModes = prefs.getBool('lockedModes') ?? false;
@@ -77,6 +77,7 @@ class _PagePostavkeState extends State<PagePostavke> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.clear();
     await _loadSettings();
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Sve postavke su resetirane.')),
     );

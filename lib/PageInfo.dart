@@ -18,15 +18,14 @@ class PageInfo extends StatelessWidget {
         child: Center(
           child: Text(
             '''
-Dobrodošli u aplikaciju MNOŽILICA!
+MNOŽILICA
 
-Ova aplikacija razvijena je kao pomoć djeci u učenju množenja – kroz igru i interaktivne zadatke.
+Aplikacija množilica izrađena je u sklopu prijediplomskog kolegija Završni rad na Fakultetu elektrotehnike i računarstva Sveučilišta u Zagrebu, ak. god. 2024./2025.
 
-Osim što pomaže djeci, aplikacija omogućuje i roditeljima praćenje napretka svoje djece, dok nastavnici mogu koristiti sadržaj u sklopu nastave kao dodatni edukativni alat.
+Aplikacija je razvijena kao pomoć djeci u učenju množenja kroz igru i interaktivne zadatke.
 
-Aplikacija je razvijena u sklopu završnog rada na Fakultetu elektrotehnike i računarstva (FER).
-
-Hvala što koristite MNOŽILICU i želim Vam uspješno učenje! 
+Implementacija: Karla Šoštar
+Mentorstvo: prof. dr. sc. Željka Car i univ.mag.ing.comp. Ana Radović
   ''',
             textAlign: TextAlign.center,
             style: TextStyle(

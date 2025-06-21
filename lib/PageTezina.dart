@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'PageIzazov.dart';
+
 class PageTezina extends StatefulWidget {
   const PageTezina({Key? key}) : super(key: key);
 
@@ -41,10 +43,15 @@ class _PageTezinaState extends State<PageTezina> {
     await prefs.setBool('timedMode', _timedMode);
   }
 
+
   void _saveAndExit() async {
     await _saveSettings();
-    Navigator.pop(context);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => PageIzazov()),
+    );
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +98,7 @@ class _PageTezinaState extends State<PageTezina> {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                 padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               ),
-              child: const Text('Pohrani promjene', style: TextStyle(color: Color(0xFF440D68), fontWeight: FontWeight.bold, fontSize: 18)),
+              child: const Text('Pohrani promjene i igraj', style: TextStyle(color: Color(0xFF440D68), fontWeight: FontWeight.bold, fontSize: 25)),
             )
           ],
         ),

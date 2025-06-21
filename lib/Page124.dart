@@ -405,7 +405,7 @@ class _Page124State extends State<Page124> {
             ),
             SizedBox(height: 16),
             Text(
-              isCorrect ? 'Odlično!' : 'Ne brini, možeš ti to!',
+              isCorrect ? 'Odlično!' '\n' 'Zadatak: $counter / $_taskCount' : 'Ne brini, možeš ti to!',
               style: TextStyle(
                 fontSize: 20,
                 color: Color(0xFF440D68),

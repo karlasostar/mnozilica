@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vodoravno/PagePostavke.dart';
 import 'package:vodoravno/PageTablica.dart';
+import 'package:vodoravno/PageTezina.dart';
 
 import 'Broj1.dart';
 import 'Broj3.dart';
@@ -18,20 +19,21 @@ import 'PageIzazov.dart';
 final AudioPlayer backgroundPlayer = AudioPlayer();
 
 Future<void> _startBackgroundMusic() async {
+  await backgroundPlayer.stop(); // uvijek zaustavi prethodnu glazbu ako postoji
   final prefs = await SharedPreferences.getInstance();
-  final soundEnabled = prefs.getBool('sound') ?? true;
-  final soundType = prefs.getString('soundType')?.toLowerCase() ?? 'zabavni';
+  final soundType = prefs.getString('soundType') ?? 'Mirni';
 
-  if (soundEnabled) {
-    try {
-      await backgroundPlayer.setReleaseMode(ReleaseMode.loop);
-      await backgroundPlayer.setSource(AssetSource('sounds/$soundType.mp3'));
-      await backgroundPlayer.resume(); // Ovdje se sviranje pokreće stabilnije
-    } catch (e) {
-      print('Greška pri pokretanju pozadinske glazbe: $e');
-    }
+  if (soundType == 'Bez zvuka') return; // ne pokreći ništa
+
+  try {
+    await backgroundPlayer.setReleaseMode(ReleaseMode.loop);
+    await backgroundPlayer.setSource(AssetSource('sounds/${soundType.toLowerCase()}.mp3'));
+    await backgroundPlayer.resume();
+  } catch (e) {
+    print('Greška pri pokretanju pozadinske glazbe: $e');
   }
 }
+
 
 
 void main() async {
@@ -42,7 +44,7 @@ void main() async {
     DeviceOrientation.landscapeRight,
   ]);
 
-  await _startBackgroundMusic();
+
 
   runApp(MyApp());
 }
@@ -71,7 +73,10 @@ class _MainMenuState extends State<MainMenu> {
   void initState() {
     super.initState();
     _loadDifficulty();
+    _startBackgroundMusic();
   }
+
+
 
   Future<void> _loadDifficulty() async {
     final prefs = await SharedPreferences.getInstance();
@@ -180,7 +185,8 @@ class _MainMenuState extends State<MainMenu> {
                         context,
                         MaterialPageRoute(builder: (context) => PagePostavke()),
                       );
-                      _loadDifficulty(); // refresh difficulty after returning
+                      _loadDifficulty(); // refresh  after returning
+                      _startBackgroundMusic();
                     },
                   ),
                 ),
@@ -203,7 +209,7 @@ class _MainMenuState extends State<MainMenu> {
               Positioned(
                 right: 40,
                 bottom: MediaQuery.of(context).size.height * 0.05,
-                child: ovalButton(context, "Izazov", PageIzazov()),
+                child: ovalButton(context, "Izazov", PageTezina()),
               ),
 
               // Center buttons (2x2 grid)

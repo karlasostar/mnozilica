@@ -1,11 +1,12 @@
 // NOVA VERZIJA sa brojacem ponavljanja
 import 'dart:math';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'main.dart';
 import 'PagePostavke.dart';
+import 'package:audioplayers/audioplayers.dart';
+
 
 class Page369 extends StatefulWidget {
   const Page369({Key? key}) : super(key: key);
@@ -18,20 +19,37 @@ class _Page369State extends State<Page369> {
   late int firstNumber;
   late int secondNumber;
   int counter = 0;
+  int _taskCount = 10;
+  final AudioPlayer _audioPlayer = AudioPlayer();
+
 
   @override
   void initState() {
     super.initState();
+    _loadTaskCount();
     _generateNewChallenge();
   }
 
-  void _generateNewChallenge() {
+  Future<void> _loadTaskCount() async {
+    final prefs = await SharedPreferences.getInstance();
     setState(() {
-      firstNumber = Random().nextInt(10) + 1;
-      secondNumber = ([3, 6, 9]..shuffle()).first;
+      _taskCount = prefs.getInt('taskCount') ?? 10;
     });
   }
 
+  Future<bool> _isSoundEnabled() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('sound') ?? true;
+  }
+
+  Future<void> _playCorrectSound() async {
+    final player = AudioPlayer();
+    await player.play(AssetSource('sounds/correct.mp3'));
+  }
+  Future<void> _playWrongSound() async {
+    final player = AudioPlayer();
+    await player.play(AssetSource('sounds/wrong.mp3'));
+  }
   Future<void> _playFeedbackSound(bool isCorrect) async {
     if (await _isSoundEnabled()) {
       final player = AudioPlayer();
@@ -40,17 +58,13 @@ class _Page369State extends State<Page369> {
       );
     }
   }
-  Future<bool> _isSoundEnabled() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool('sound') ?? true;
-  }
-  Future<void> _playCorrectSound() async {
-    final player = AudioPlayer();
-    await player.play(AssetSource('sounds/correct.mp3'));
-  }
-  Future<void> _playWrongSound() async {
-    final player = AudioPlayer();
-    await player.play(AssetSource('sounds/wrong.mp3'));
+
+
+  void _generateNewChallenge() {
+    setState(() {
+      firstNumber = Random().nextInt(10) + 1;
+      secondNumber = ([3, 6, 9]..shuffle()).first;
+    });
   }
 
   @override
@@ -106,6 +120,11 @@ class _Page369State extends State<Page369> {
               ),
             ),
           ),
+
+
+
+
+
 
           Positioned(
             top: 20,
@@ -185,7 +204,7 @@ class _Page369State extends State<Page369> {
               builder: (context) {
                 Future.delayed(Duration(seconds: 2), () {
                   Navigator.of(context).pop();
-                  if (counter < 10) {
+                  if (counter < _taskCount) {
                     _generateNewChallenge();
                   } else {
                     showDialog(
@@ -218,7 +237,7 @@ class _Page369State extends State<Page369> {
                             children: [
                               SizedBox(height: 10),
                               Text(
-                                "Riješio si 10 zadataka!",
+                                "Riješio si $_taskCount zadataka!",
                                 style: TextStyle(
                                   fontSize: 22,
                                   color: Color(0xFF440D68),
@@ -354,6 +373,7 @@ class _Page369State extends State<Page369> {
 
   Widget _feedbackDialog(bool isCorrect, int result) {
     Future.microtask(() => _playFeedbackSound(isCorrect));
+
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30),
@@ -385,7 +405,7 @@ class _Page369State extends State<Page369> {
             ),
             SizedBox(height: 16),
             Text(
-              isCorrect ? 'Odlično!' : 'Ne brini, možeš ti to!',
+              isCorrect ? 'Odlično!' '\n' 'Zadatak: $counter / $_taskCount' : 'Ne brini, možeš ti to!',
               style: TextStyle(
                 fontSize: 20,
                 color: Color(0xFF440D68),
